@@ -1,0 +1,34 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Adjust as per your application's requirements
+      
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Build Application
+        run: npm run build
+      
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - name: Deploy to Hosting Service
+        uses: some-deployment-action@v1
+        with:
+          token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          environment: production
